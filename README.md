@@ -7,7 +7,7 @@ Xia, Y., Granström, K., Svensson, L., García-Femández, Á. F. & Williams, J (
 
 Full text will be available soon.
 
-More details on GGIW-PMBM can be found in the paper (accepted for publication in IEEE Transactions on Aerospace and Electric Systems)
+More details on GGIW-PMBM can be found in the paper (accepted for publication in IEEE Transactions on Aerospace and Electronic Systems)
 
 Granstrom, Karl, Maryam Fatemi, and Lennart Svensson. "Poisson multi-Bernoulli conjugate prior for multiple extended object estimation." arXiv preprint arXiv:1605.06311 (2016).
 
@@ -15,7 +15,7 @@ Full text is available at https://arxiv.org/abs/1605.06311
 
 More details on the point target PMBM tracker can be found in the paper 
 
-Granström, Karl, Lennart Svensson, Yuxuan Xia, Jason Williams, and Ángel F. García-Femández. "Poisson multi-Bernoulli mixture trackers: continuity through random finite sets of trajectories." In 2018 21st International Conference on Information Fusion (FUSION), pp. 1-5. IEEE, 2018.
+Granström, Karl, Lennart Svensson, Yuxuan Xia, Jason Williams, and Ángel F. García-Femández. "Poisson multi-Bernoulli mixture trackers: continuity through random finite sets of trajectories." In 2018 21st International Conference on Information Fusion (FUSION). IEEE, 2018.
 
 Full text is available at https://arxiv.org/pdf/1812.05131
 

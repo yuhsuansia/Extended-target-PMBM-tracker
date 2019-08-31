@@ -1,5 +1,10 @@
 function in_gate = ellipsoidalGating(W,GGIW,model)
 
+if isempty(W)
+    in_gate = [];
+    return;
+end
+
 d = 2;
 
 in_gate = false(size(W,2),1);

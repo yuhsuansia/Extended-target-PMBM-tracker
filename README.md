@@ -7,9 +7,9 @@ Xia, Y., Granström, K., Svensson, L., García-Femández, Á. F. & Williams, J (
 
 Full text will be available soon.
 
-More details on GGIW-PMBM can be found in the paper (accepted for publication in IEEE Transactions on Aerospace and Electronic Systems)
+More details on GGIW-PMBM can be found in the paper
 
-Granstrom, Karl, Maryam Fatemi, and Lennart Svensson. "Poisson multi-Bernoulli conjugate prior for multiple extended object estimation." arXiv preprint arXiv:1605.06311 (2016).
+Granstrom, Karl, Maryam Fatemi, and Lennart Svensson. "Poisson multi-Bernoulli mixture conjugate prior for multiple extended target filtering." IEEE Transactions on Aerospace and Electronic Systems (2019).
 
 Full text is available at https://arxiv.org/abs/1605.06311
 
@@ -22,7 +22,7 @@ Full text is available at https://arxiv.org/pdf/1812.05131
 
 The filters are evaluated using the generalised optimal subpattern-assignment (GOSPA) integrated with the Gaussian Wasserstein distance
 
-A. S. Rahmathullah, A. F. GarcÌa-Fernández, and L. Svensson, Generalized optimal sub-pattern assignment metric, in 20th International
+A. S. Rahmathullah, A. F. García-Fernández, and L. Svensson, Generalized optimal sub-pattern assignment metric, in 20th International
 Conference on Information Fusion, 2017.
 
 Video on GOSPA: https://www.youtube.com/watch?v=M79GTTytvCM

@@ -5,7 +5,7 @@ This repository contains the Matlab implementations of the Extended target Poiss
 
 Xia, Y., Granström, K., Svensson, L., García-Femández, Á. F. & Williams, J (2019, July). Extended Target Poisson multi-Bernoulli Mixture Trackers Based on Sets of Trajectories. In 2019 22nd International Conference on Information Fusion (FUSION) IEEE.
 
-Full text will be available soon.
+Full text is available at https://arxiv.org/abs/1911.09025
 
 More details on GGIW-PMBM can be found in the paper
 

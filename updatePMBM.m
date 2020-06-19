@@ -247,7 +247,7 @@ end
 n_tt = length(tracks);
 for i = 1:n_tt
     idx = table(:,i) > 0;
-    [~,~,table(idx,i)] = unique(table(idx,i),'rows','stable');
+    [~,~,table(idx,i)] = unique(table(idx,i));
 %     if any(idx)
 %         table(idx,i) = 0;
 %         table(~idx,i) = table(~idx,i) - 1;
@@ -309,7 +309,7 @@ end
 % n_tt = length(tracks);
 % for i = 1:n_tt
 %     idx = table(:,i)==0;
-%     [~,~,table(:,i)] = unique(table(:,i),'rows');
+%     [~,~,table(:,i)] = unique(table(:,i));
 %     if any(idx)
 %         table(idx,i) = 0;
 %         table(~idx,i) = table(~idx,i) - 1;
@@ -318,7 +318,7 @@ end
 % 
 % %Merge duplicate hypothesis table rows
 % if ~isempty(table)
-%     [ht,~,ic] = unique(table,'rows');
+%     [ht,~,ic] = unique(table,'rows','stable');
 %     if(size(ht,1)~=size(table,1))
 %         %There are duplicate entries
 %         w = zeros(size(ht,1),1);

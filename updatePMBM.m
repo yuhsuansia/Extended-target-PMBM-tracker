@@ -247,7 +247,7 @@ end
 n_tt = length(tracks);
 for i = 1:n_tt
     idx = table(:,i) > 0;
-    [~,~,table(idx,i)] = unique(table(idx,i));
+    [~,~,table(idx,i)] = unique(table(idx,i),'stable');
 %     if any(idx)
 %         table(idx,i) = 0;
 %         table(~idx,i) = table(~idx,i) - 1;
@@ -309,7 +309,7 @@ end
 % n_tt = length(tracks);
 % for i = 1:n_tt
 %     idx = table(:,i)==0;
-%     [~,~,table(:,i)] = unique(table(:,i));
+%     [~,~,table(:,i)] = unique(table(:,i),'stable');
 %     if any(idx)
 %         table(idx,i) = 0;
 %         table(~idx,i) = table(~idx,i) - 1;

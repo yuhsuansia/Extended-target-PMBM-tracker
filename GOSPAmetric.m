@@ -49,7 +49,7 @@ for ix = 1:Nx
         %prd = abs(X.g(ix)-Y.g(iy));
         
         % Apply threshold c
-        D(ix,iy) = gwd;
+        D(ix,iy) = min(c,gwd);
     end
 end
 

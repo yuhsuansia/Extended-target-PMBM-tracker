@@ -1,3 +1,5 @@
+% Code by Yuxuan Xia
+
 function [GGIW_c,lik_c] = updateGGIWforPPP(GGIWp,C,model)
 
 %Perform GGIW update for each mixture component

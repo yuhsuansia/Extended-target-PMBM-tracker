@@ -1,3 +1,5 @@
+% Code by Yuxuan Xia
+
 classdef measmodel
     %MEASMODEL is a class containing different measurement models
     

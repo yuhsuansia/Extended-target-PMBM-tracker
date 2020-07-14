@@ -1,3 +1,5 @@
+% Code by Yuxuan Xia
+
 classdef motionmodel
     %MOTIONMODEL is a class containing different motion models
     

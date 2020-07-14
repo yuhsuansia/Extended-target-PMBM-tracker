@@ -1,3 +1,5 @@
+% Code by Yuxuan Xia
+
 function [GGIW,lik] = updateGGIW(GGIW,W,model)
 
 %GGIW update for a trajectory sequence of GGIWs

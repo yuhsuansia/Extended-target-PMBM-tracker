@@ -1,3 +1,5 @@
+% Code by Yuxuan Xia
+
 function [PPP,MBM] = predictPMBM(PPP,MBM,model)
 
 % Predict existing PPP (for each GGIW component)

@@ -1,3 +1,5 @@
+% Code by Yuxuan Xia
+
 function [estimates,trajectoryEstimates] = estimator(MBM,model)
 
 %Initialise memory for trajectory estimates (both alive and dead)

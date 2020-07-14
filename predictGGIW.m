@@ -1,3 +1,5 @@
+% Code by Yuxuan Xia
+
 function [GGIW] = predictGGIW(GGIW,model)
 
 % (heuristic) Gamma prediction

@@ -1,3 +1,5 @@
+% Code by Yuxuan Xia
+
 function [Bern,lik] = detectionBern(Bern,C,model)
 
 %local hypothesis state update

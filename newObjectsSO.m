@@ -1,3 +1,5 @@
+% Code by Yuxuan Xia
+
 function [tracks,table,wAssoc] = newObjectsSO(tracks,table,wAssoc,PPP,W,gating_matrix,used_meas_u_not_d,k,model)
 
 %Perform stochastic optimisation to find measurement partitions with high

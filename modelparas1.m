@@ -118,31 +118,35 @@ model.exist_r = 0.5;
 
 %% Plot ground truth
 
-% screen_size = get(0, 'ScreenSize');
-% f1 = figure;
-% set(f1, 'Position', [0 0 screen_size(3) screen_size(4)]);
-% grid on
-% box on
-% hold on
-% 
-% cols = parula(length(targetTracks));
-% for it = 1:length(targetTracks)
-%     xx = targetTracks(it).x(1,:);
-%     yy = targetTracks(it).x(2,:);
-%     plot(xx,yy,'linewidth',2)
-%     for ii = 1:size(xx,2)
-%         %illustrate the 3-sigma level of ellipse
-%         [cx,cy]=Sigmacircle(xx(ii),yy(ii),targetTracks(it).X(:,:,ii),3);
-%         plot(cx,cy,'-','color',cols(it,:),'linewidth',1);
-%     end
-% end
-% 
-% xlabel('x');ylabel('y')
-% xlim([-200,200])
-% ylim([-200,200])
-% xlabel('x (m)','Interpreter','latex')
-% ylabel('y (m)','Interpreter','latex')
-% axesH = gca;
-% axesH.XAxis.TickLabelInterpreter = 'latex';
-% axesH.YAxis.TickLabelInterpreter = 'latex';
-% set(gca,'FontSize',16)
+if ifplot
+
+screen_size = get(0, 'ScreenSize');
+f1 = figure(1);
+set(f1, 'Position', [0 0 screen_size(3) screen_size(4)]);
+grid on
+box on
+hold on
+
+cols = parula(length(targetTracks));
+for it = 1:length(targetTracks)
+    xx = targetTracks(it).x(1,:);
+    yy = targetTracks(it).x(2,:);
+    plot(xx,yy,'linewidth',2)
+    for ii = 1:size(xx,2)
+        %illustrate the 3-sigma level of ellipse
+        [cx,cy]=Sigmacircle(xx(ii),yy(ii),targetTracks(it).X(:,:,ii),3);
+        plot(cx,cy,'-','color',cols(it,:),'linewidth',1);
+    end
+end
+
+xlabel('x');ylabel('y')
+xlim([-200,200])
+ylim([-200,200])
+xlabel('x (m)','Interpreter','latex')
+ylabel('y (m)','Interpreter','latex')
+axesH = gca;
+axesH.XAxis.TickLabelInterpreter = 'latex';
+axesH.YAxis.TickLabelInterpreter = 'latex';
+set(gca,'FontSize',16)
+
+end

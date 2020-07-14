@@ -1,3 +1,5 @@
+% Code by Yuxuan Xia
+
 function [Bern,lik] = detectionPPP(wp,GGIWp,C,model)
 
 %GGIW state update given measurement set

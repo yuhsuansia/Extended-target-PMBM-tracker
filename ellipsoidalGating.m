@@ -1,3 +1,5 @@
+% Code by Yuxuan Xia
+
 function in_gate = ellipsoidalGating(W,GGIW,model)
 
 if isempty(W)

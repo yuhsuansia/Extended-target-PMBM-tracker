@@ -1,4 +1,8 @@
+% Code by Yuxuan Xia
+
 function [what,GGIWhat] = mixtureReduction(w,GGIW,model)
+
+% Use a greedy merging method to reduce the number of mixture components
 
 if length(w) == 1
     what = w;

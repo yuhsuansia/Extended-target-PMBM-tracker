@@ -1,3 +1,5 @@
+% Code by Yuxuan Xia
+
 function [w_hat,GGIW_hat] = GGIW_merge_wrap(w,GGIWs)
 
 % a function warper

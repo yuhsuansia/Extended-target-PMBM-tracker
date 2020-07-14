@@ -1,3 +1,5 @@
+% Code by Yuxuan Xia
+
 function [partitions,lik] = ObjectsSO(MBM,j,PPP,W,gating_matrix_d,gating_matrix_u,model)
 
 m = size(W,2);

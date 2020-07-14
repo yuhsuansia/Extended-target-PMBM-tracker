@@ -1,3 +1,5 @@
+% Code by Karl Granstrom
+
 function [x, y] = Sigmacircle(cx,cy,P,N,N2)
 
 %Function used to draw an ellipse parameterised by matrix P, N is the sigma

@@ -1,3 +1,5 @@
+% Code by Yuxuan Xia
+
 function [PPP,MBM] = recycleBern(PPP,MBM,model)
 
 %Recycle Bernoullis with low existence probability and add them to PPP

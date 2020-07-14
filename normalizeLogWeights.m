@@ -1,5 +1,5 @@
 function [log_w,log_sum_w] = normalizeLogWeights(log_w)
-
+% Code by Karl Granstrom
 %
 % Input:
 % log_w - log weights, e.g., log likelihoods

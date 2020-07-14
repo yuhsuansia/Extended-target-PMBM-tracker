@@ -1,3 +1,5 @@
+% Code by Yuxuan Xia
+
 function [Bern,lik] = misdetectionBern(Bern,model)
 
 % For extended target tracking, misdetection can either due to the fact

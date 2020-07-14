@@ -1,5 +1,7 @@
 function [PPP,MBM] = recycleBern(PPP,MBM,model)
 
+%Recycle Bernoullis with low existence probability and add them to PPP
+
 n_tt = length(MBM.track);
 for i = 1:n_tt
     idx = arrayfun(@(x) x.Bern.r<model.recycle, MBM.track{i});
@@ -71,6 +73,7 @@ if ~isempty(MBM.table)
     end
 end
 
+%Merge similar components in PPP
 [PPP.w,PPP.GGIW] = mixtureReduction(PPP.w,PPP.GGIW,model);
 
 end

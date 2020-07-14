@@ -9,20 +9,24 @@ w_e_gamma = 20;
 % Effective window length for the extent prediction
 w_e_extent = 10;
 
+% Parameters to control the agility of the prediction
 model.tao = 1/(log(w_e_extent)-log(w_e_extent-1));
 model.eta = 1/(1-1/w_e_gamma);
+
 model.Ts = 1;   %sampling interval
 sigma_v = 0.5;  %standard deviation of motion noise
 sigma_r = 0.1;  %standard deviation of measurement noise
+
+% Linear motion and measurement models
 model.motionmodel = motionmodel.cvmodel(model.Ts,sigma_v);
 model.measmodel = measmodel.cvmeasmodel(sigma_r);
 
-% generate tracks (ground truth)
-X = cell(K,1);
-E = cell(K,1);
-N = zeros(K,1);
-groundTruth = cell(K,1);
-% generate tracks (ground truth)
+% Reconstruct the data structure
+
+% Generate tracks (ground truth)
+X = cell(K,1);  %kinematic states
+E = cell(K,1);  %extent states
+N = zeros(K,1); %number of targets
 for targetnum = 1:length(targetTracks)
     for k = targetTracks(targetnum).birthTime:targetTracks(targetnum).deathTime
         targetstate = targetTracks(targetnum).x(1:model.motionmodel.d,k-targetTracks(targetnum).birthTime+1);
@@ -38,40 +42,45 @@ for k = 1:K
     groundTruth{k}.X = E{k};
 end
 
-%target existence probability
+% Target existence probability
 model.Ps = 0.99;
-%target detection probability
+% Target detection probability
 model.Pd = Scenario.detection_prob;
 
-%range of the surveillance area
+% Range of the surveillance area
 range_c = [-1 1;-1 1]*100;
-%Poisson false alarm (clutter) rate
+% Poisson false alarm (clutter) rate
 lambda_c = Scenario.false_alarm_rate;
-%Poisson clutter intensity
+% Poisson clutter intensity
 model.lambda_fa= lambda_c/prod(range_c(:,2)-range_c(:,1));
 
-% target initial state
+% Target initial state (one broad prior)
 nbirths = 1;
 xstart = zeros(model.motionmodel.d,nbirths);
 
-%Birth model
-d = 2;
-model.birth.w = 0.01*ones(nbirths,1);
+% Poisson birth model
+model.birth.w = 0.01*ones(nbirths,1);   %weights of birth components
+% Each GGIW component is described by the sufficient statistics of Gamma
+% distribution (a,b), Gaussian distirbution (m,P) and inverse-Wishart
+% distributino (v,V). For inverse-Wishart distribution, v is a scalar
+% controls the distribution uncertainty. The larger v, the smaller
+% uncertainty.
 model.birth.GGIW = repmat(struct('a',5e3,'b',1e3,'m',[],'P',diag([ 50; 50; 5; 5 ])*diag([ 50; 50; 5; 5 ])','v',14,'V',10*eye(2)),[nbirths,1]);
 for i = 1:nbirths
     model.birth.GGIW(i).m = xstart(:,i);
 end
 
 % Gating parameters
-Pg = 0.999;
+Pg = 0.999; %gating size in probability
 model.gamma= chi2inv(Pg,model.measmodel.d);
+% Effective missed detection probability after applying gating
 model.Qd = 1 - model.Pd*Pg;
 
-% Thresholds
+% Pruning thresholds
 model.threshold_r = 1e-2;   %existence probability of Bernoulli component
 model.threshold_u = 1e-2;   %weight of mixture component in PPP
 model.threshold_w = 1e-2;   %weight of global hypothesis (multi-Bernoulli)
-model.threshold_s = 1e-4;   %weight of the trajectory is still alive
+
 model.recycle = 1e-1;       %recycling threshold
 model.merge = 4;            %merge threshold used to merge similar GGIWs
 model.M = 100;              %cap of number of MBM components in PMBM
@@ -82,3 +91,33 @@ model.max_repetition = 2;   %controls the number of iterations used in SO
 %larger than this threshold 
 model.exist_r = 0.5;
 
+%% Plot ground truth
+
+% screen_size = get(0, 'ScreenSize');
+% f1 = figure;
+% set(f1, 'Position', [0 0 screen_size(3) screen_size(4)]);
+% grid on
+% box on
+% hold on
+% 
+% cols = parula(length(targetTracks));
+% for it = 1:length(targetTracks)
+%     xx = targetTracks(it).x(1,:);
+%     yy = targetTracks(it).x(2,:);
+%     plot(xx,yy,'linewidth',2)
+%     for ii = 1:size(xx,2)
+%         %illustrate the 3-sigma level of ellipse
+%         [cx,cy]=Sigmacircle(xx(ii),yy(ii),targetTracks(it).X(:,:,ii),3);
+%         plot(cx,cy,'-','color',cols(it,:),'linewidth',1);
+%     end
+% end
+% 
+% xlabel('x');ylabel('y')
+% xlim([-100,100])
+% ylim([-100,100])
+% xlabel('x (m)','Interpreter','latex')
+% ylabel('y (m)','Interpreter','latex')
+% axesH = gca;
+% axesH.XAxis.TickLabelInterpreter = 'latex';
+% axesH.YAxis.TickLabelInterpreter = 'latex';
+% set(gca,'FontSize',16)

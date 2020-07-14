@@ -1,5 +1,7 @@
 function [w2,a2,b2,m2,P2,nu2,V2] = GGIW_merge(w,a,b,m,P,nu,V)
 
+%Merge a mixture of GGIWs into a single GGIW, code by Karl Granstrom
+
 nu_min = 7;
 v_min = 1;
 

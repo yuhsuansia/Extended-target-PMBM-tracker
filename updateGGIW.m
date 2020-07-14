@@ -1,5 +1,8 @@
 function [GGIW,lik] = updateGGIW(GGIW,W,model)
 
+%GGIW update for a trajectory sequence of GGIWs
+%Only update the latest state
+
 d = 2;
 
 card_W = size(W,2);
@@ -34,7 +37,7 @@ N = X_sqrt*S_sqrt_inv*(epsilon*epsilon')*S_sqrt_inv'*X_sqrt';
 GGIW_.v = GGIW(end).v + card_W;
 GGIW_.V = GGIW(end).V + N + Z;
 
-%
+%GGIW predicted likelihood
 
 lik = (GGIW(end).v-d-1)/2*log(det2(GGIW(end).V)) - (GGIW_.v-d-1)/2*log(det2(GGIW_.V))...
         + gamma2ln((GGIW_.v-d-1)/2) - gamma2ln((GGIW(end).v-d-1)/2)...

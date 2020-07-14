@@ -1,5 +1,9 @@
 function [tracks,table,wAssoc] = newObjectsSO(tracks,table,wAssoc,PPP,W,gating_matrix,used_meas_u_not_d,k,model)
 
+%Perform stochastic optimisation to find measurement partitions with high
+%likelihood for PPP components. Note that this can be directly applied to
+%extended target PHD filter using stochastic optimisation
+
 indices = 1:size(W,2);
 
 W = W(:,used_meas_u_not_d);
@@ -10,7 +14,7 @@ T = model.num_iterations*m;     %number of iterations
 
 %Initialisation, each measurement corresponds to a new object
 meas_cell = cell(m,1);
-Lc = zeros(m,1);                %likelihood for each cell
+Lc = zeros(m,1);    %likelihood for each cell
 for i = 1:m
     meas_cell{i} = i;
     [~,Lc(i)] = detectionPPP(PPP.w(gating_matrix(i,:)),...
@@ -164,8 +168,9 @@ for t = 1:T
     if sum(Lp) > lik; bestPartition = meas_cell; end
 end
 
-n_tt = length(bestPartition);
+%Create new tracks and hypothesis look-up table
 
+n_tt = length(bestPartition);
 true_meas_indices = find(used_meas_u_not_d==1);
 
 n = length(tracks);

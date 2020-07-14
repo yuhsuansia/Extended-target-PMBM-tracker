@@ -1,5 +1,7 @@
 function [w2,a2,b2] = gammaMerge(w,a,b)
 
+% Function used to merge a Gamma mixture, code by Karl Granstrom
+
 % Number of components
 N=length(a);
 
@@ -44,3 +46,5 @@ a2 = a_k;
 b2 = a2/(sum(w(:).*a(:)./b(:))/wb);
 
 w2 = wb;
+
+end

@@ -1,6 +1,6 @@
 function [ Error ] = GOSPAmetric(X,Y,c,p)
 
-%
+% Code by Karl Granstrom
 % Function that computes the Generalized Optimal Subpattern Assignment (OSPA) Metric
 % for the random sets X and Y.
 %
@@ -45,8 +45,6 @@ for ix = 1:Nx
     for iy = 1:Ny
         % Gaussian Wasserstein Distance for kinematics and extent
         gwd = GaussianWassersteinDistance(X.x(1:2,ix),X.X(:,:,ix),Y.x(1:2,iy),Y.X(:,:,iy));
-        % Poisson rates
-        %prd = abs(X.g(ix)-Y.g(iy));
         
         % Apply threshold c
         D(ix,iy) = min(c,gwd);
@@ -94,53 +92,16 @@ else
     
 end
 
+% GOSPA metric 
 gospa = (gospa + 0.5*(c^p)*(Nx+Ny-2*absGamma))^(1/p);
 
-% Missed detection error
+% Number of misdetection
 MissedError = Ny-absGamma;
 
-% False alarm error
+% Number of false detection
 FalseError = Nx-absGamma;
+
 
 Error = [gospa,LocationError,MissedError,FalseError];
 
-
-% if Nx>Ny % assume X contains fewer elements than Y
-%     tmp = X;
-%     X = Y;
-%     Y = tmp;
-%     Nx = size(X,2);
-%     Ny = size(Y,2);
-% end
-% 
-% % Construct distance matrix D
-% D = repmat(c,[Ny Ny]);
-% for i = 1:Nx
-%     xi = X(1:2,i);
-%     for j = 1:Ny
-%         xj = Y(1:2,j);
-%         % Euclidean norm
-%         D(i,j) = min(c,norm(xi-xj));
-%     end
-% end
-% 
-% % Use the auction algorithm to compute the best assignments
-% % auction maximizes the reward. Maximizing the negative distance is equal
-% % to minimizing the positive distance.
-% [~,Item2Customer] = auctionAlgorithm(-D);
-% 
-% %D = dg+dx+dX;
-% 
-% % allocate memory
-% alphas = repmat(c,[1 Ny]);
-% % compute the alphas
-% for j = 1:Ny
-%     if Item2Customer(j) <= Nx
-%         alphas(j) = D(Item2Customer(j),j);
-%     end
-% end
-% 
-% % Compute the OSPA metric
-% gospa   = (mean(alphas.^p))^(1/p);
-
-
+end

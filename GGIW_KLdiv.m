@@ -2,7 +2,8 @@ function [KLdiv] = GGIW_KLdiv(GGIW1,GGIW2)
 
 % Function that computes the KL-divergence between two
 % Gamma-Gaussian-inverse Wishart (GGIW) distributions
-%
+% Code by Karl granstrom
+
 % p(g,x,X) = Gam(g;a1,b1)N(x;m1,P1)IW(X;v1,V1)
 % q(g,x,X) = Gam(g;a2,b2)N(x;m2,P2)IW(X;v2,V2)
 %

@@ -1,5 +1,7 @@
 function [GGIW_c,lik_c] = updateGGIWforPPP(GGIWp,C,model)
 
+%Perform GGIW update for each mixture component
+
 np = length(GGIWp);
 
 d = 2;
@@ -39,6 +41,7 @@ for i = 1:np
     GGIW_c(i,1).v = GGIWp(i,1).v + card_W;
     GGIW_c(i,1).V = GGIWp(i,1).V + N + Z;
     
+    %GGIW predicted likelihood
     lik_c(i) = (GGIWp(i,1).v-d-1)/2*log(det2(GGIWp(i,1).V)) - (GGIW_c(i,1).v-d-1)/2*log(det2(GGIW_c(i,1).V))...
         + gamma2ln((GGIW_c(i,1).v-d-1)/2) - gamma2ln((GGIWp(i,1).v-d-1)/2)...
         + log(det2(X_hat))/2 - log(det_S)/2 + gammaln(GGIW_c(i,1).a)...

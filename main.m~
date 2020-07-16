@@ -31,7 +31,7 @@
 clear;close all;clc
 dbstop if error
 
-addpath('Data','Third-party code','Common')
+addpath('Data','Third-party code','Common',)
 
 %Choose which multiple extended object tracking algorithm to implement:
 %MEOT 1: PMBM filter; MEOT 2: PMBM tracker

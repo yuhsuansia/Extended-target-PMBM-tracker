@@ -99,12 +99,13 @@ end
 Pg = 0.999; %gating size in probability
 model.gamma= chi2inv(Pg,model.measmodel.d);
 % Effective missed detection probability after applying gating
-model.Qd = 1 - model.Pd*Pg; 
+model.Qd = 1 - model.Pd*Pg;
 
 % Pruning thresholds
 model.threshold_r = 1e-2;   %existence probability of Bernoulli component
 model.threshold_u = 1e-2;   %weight of mixture component in PPP
 model.threshold_w = 1e-2;   %weight of global hypothesis (multi-Bernoulli)
+model.threshold_s = 1e-4;   %weight of trajectory is alive if exists
 
 model.recycle = 1e-1;       %recycling threshold
 model.merge = 4;            %merge threshold used to merge similar GGIWs
@@ -113,40 +114,36 @@ model.num_iterations = 3;   %controls the number of iterations used in SO
 model.max_repetition = 1;   %controls the number of iterations used in SO
 
 % Extract target state from Bernoulli components with existence probability
-% larger than this threshold  
-model.exist_r = 0.5; 
+% larger than this threshold
+model.exist_r = 0.5;
 
 %% Plot ground truth
 
 if ifplot
-
-screen_size = get(0, 'ScreenSize');
-f1 = figure(1);
-set(f1, 'Position', [0 0 screen_size(3) screen_size(4)]);
-grid on
-box on
-hold on
-
-cols = parula(length(targetTracks));
-for it = 1:length(targetTracks)
-    xx = targetTracks(it).x(1,:);
-    yy = targetTracks(it).x(2,:);
-    plot(xx,yy,'linewidth',2)
-    for ii = 1:size(xx,2)
-        %illustrate the 3-sigma level of ellipse
-        [cx,cy]=Sigmacircle(xx(ii),yy(ii),targetTracks(it).X(:,:,ii),3);
-        plot(cx,cy,'-','color',cols(it,:),'linewidth',1);
+    
+    screen_size = get(0, 'ScreenSize');
+    f1 = figure(1);
+    set(f1, 'Position', [0 0 screen_size(3) screen_size(4)]);
+    grid on;box on;hold on
+    
+    cols = parula(length(targetTracks));
+    for it = 1:length(targetTracks)
+        xx = targetTracks(it).x(1,:);
+        yy = targetTracks(it).x(2,:);
+        plot(xx,yy,'linewidth',2)
+        for ii = 1:size(xx,2)
+            %illustrate the 3-sigma level of ellipse
+            [cx,cy]=Sigmacircle(xx(ii),yy(ii),targetTracks(it).X(:,:,ii),3);
+            plot(cx,cy,'-','color',cols(it,:),'linewidth',1);
+        end
     end
-end
-
-xlabel('x');ylabel('y')
-xlim([-200,200])
-ylim([-200,200])
-xlabel('x (m)','Interpreter','latex')
-ylabel('y (m)','Interpreter','latex')
-axesH = gca;
-axesH.XAxis.TickLabelInterpreter = 'latex';
-axesH.YAxis.TickLabelInterpreter = 'latex';
-set(gca,'FontSize',16)
-
+    
+    xlabel('x');ylabel('y')
+    xlim([-200,200])
+    ylim([-200,200])
+    xlabel('x (m)','Interpreter','latex')
+    ylabel('y (m)','Interpreter','latex')
+    set(gca,'TickLabelInterpreter', 'latex');
+    set(gca,'FontSize',16)
+    
 end

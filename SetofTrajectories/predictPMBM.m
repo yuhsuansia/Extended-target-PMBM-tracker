@@ -16,10 +16,14 @@ n_track = length(MBM.track);
 for i = 1:n_track % for each hypothesis tree (track)
     nh = length(MBM.track{i});
     for h = 1:nh % for each local hypothesis (Bernoulli)
-        MBM.track{i}(h).Bern.GGIW = predictGGIW(MBM.track{i}(h).Bern.GGIW,model);
-        MBM.track{i}(h).Bern.t_death = [MBM.track{i}(h).Bern.t_death MBM.track{i}(h).Bern.t_death(end)+1];
-        MBM.track{i}(h).Bern.w_death = [MBM.track{i}(h).Bern.w_death(1:end-1) ...
-            MBM.track{i}(h).Bern.w_death(end)*(1-model.Ps) MBM.track{i}(h).Bern.w_death(end)*model.Ps];
+        if MBM.track{i}(h).Bern.w_death(end) >= model.threshold_s
+            MBM.track{i}(h).Bern.GGIW = predictGGIW(MBM.track{i}(h).Bern.GGIW,model);
+            MBM.track{i}(h).Bern.t_death = [MBM.track{i}(h).Bern.t_death MBM.track{i}(h).Bern.t_death(end)+1];
+            MBM.track{i}(h).Bern.w_death = [MBM.track{i}(h).Bern.w_death(1:end-1) ...
+                MBM.track{i}(h).Bern.w_death(end)*(1-model.Ps) MBM.track{i}(h).Bern.w_death(end)*model.Ps];
+        else
+            MBM.track{i}(h).Bern.w_death(end) = 0;
+        end
     end
 end
 

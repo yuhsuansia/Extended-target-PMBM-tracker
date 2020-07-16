@@ -20,17 +20,14 @@ for i = 1:n_tt
         temp = [MBM.track{i}(idx).Bern];
         PPP.w = [PPP.w;log([temp.r]')+w_h];
         PPP.GGIW = [PPP.GGIW;[temp.GGIW]'];
-    end
-    idx = arrayfun(@(x) x.Bern.r<model.recycle, MBM.track{i});
-    if idx
         %Remove Bernoullis
         MBM.track{i} = MBM.track{i}(~idx);
         %Update hypothesis table, if a Bernoulli component is
         %pruned, set its corresponding entry to zero
-        idx = find(idx);
-        for j = 1:length(idx)
+        idxx = find(idx);
+        for j = 1:length(idxx)
             temp = MBM.table(:,i);
-            temp(temp==idx(j)) = 0;
+            temp(temp==idxx(j)) = 0;
             MBM.table(:,i) = temp;
         end
     end

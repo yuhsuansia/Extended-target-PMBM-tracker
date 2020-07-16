@@ -23,7 +23,7 @@ for i = 1:n_tt
     gating_matrix_d{i} = false(m,num_hypo);
     for j = 1:num_hypo
         %Perform gating for each single object hypothesis
-        if MBM.track{i}(j).Bern.t_death(end) == time
+        if MBM.track{i}(j).Bern.t_death(end) == time && MBM.track{i}(j).Bern.w_death(end) > 0
             gating_matrix_d{i}(:,j) = ellipsoidalGating(W,MBM.track{i}(j).Bern.GGIW(end),model);
         end
     end
@@ -309,64 +309,64 @@ end
 %Merge similar Bernoulli components in the track (a heuristic method)
 %NOT IMPLEMENTED IN PAPER
 
-% n_tt = length(tracks);
-% for i = 1:n_tt
-%     nb = length(tracks{i});
-%     if nb > 1
-%         %find the highest weight MB that contains this track
-%         idx_mb = table(:,i) > 0;
-%         idx_mb = find(idx_mb);
-%         [~,idx] = max(wAssoc(idx_mb));
-%         idx_b = table(idx_mb(idx),i);
-%         I = idx_b;
-%         for j = 1:nb
-%             if j ~= idx_b && tracks{i}(idx_b).Bern.r == tracks{i}(j).Bern.r...
-%                     && GGIW_KLdiv(tracks{i}(idx_b).Bern.GGIW(end),tracks{i}(j).Bern.GGIW(end)) < model.merge
-%                 I = [I j];
-%             end
-%         end
-%         len = length(I);
-%         if len > 1
-%             Bern_temp = [tracks{i}(I).Bern];
-%             w_temp = zeros(len,1);
-%             GGIW_to_merge = [];
-%             for l = 1:len
-%                 [~,w_temp(l)] = normalizeLogWeights(wAssoc(table(:,i)==I(l)));
-%                 GGIW_to_merge = [GGIW_to_merge;Bern_temp(l).GGIW(end)];
-%             end
-%             %Assume the same weight
-%             [~,GGIW_hat] = GGIW_merge_wrap(w_temp,GGIW_to_merge);
-%             tracks{i}(idx_b).Bern.GGIW(end) = GGIW_hat;
-%             idx_remove = setdiff(I,idx_b);
-%             tracks{i}(idx_remove) = [];
-%             table(ismember(table(:,i),I),i) = idx_b;
-%         end
-%     end
-% end
-% 
-% %Re-index hypothesis table
-% n_tt = length(tracks);
-% for i = 1:n_tt
-%     idx = table(:,i) > 0;
-%     [~,~,table(idx,i)] = unique(table(idx,i),'rows','stable');
-% end
-% 
-% %Merge duplicate hypothesis table rows
-% if ~isempty(table)
-%     [ht,~,ic] = unique(table,'rows','stable');
-%     if(size(ht,1)~=size(table,1))
-%         %There are duplicate entries
-%         w = zeros(size(ht,1),1);
-%         for i = 1:size(ht,1)
-%             indices_dupli = (ic==i);
-%             [~,w(i)] = normalizeLogWeights(wAssoc(indices_dupli));
-%         end
-%         table = ht;
-%         wAssoc = w;
-%     end
-% end
-% 
-% if length(wAssoc) == 1; wAssoc = 0; end
+n_tt = length(tracks);
+for i = 1:n_tt
+    nb = length(tracks{i});
+    if nb > 1
+        %find the highest weight MB that contains this track
+        idx_mb = table(:,i) > 0;
+        idx_mb = find(idx_mb);
+        [~,idx] = max(wAssoc(idx_mb));
+        idx_b = table(idx_mb(idx),i);
+        I = idx_b;
+        for j = 1:nb
+            if j ~= idx_b && tracks{i}(idx_b).Bern.r == tracks{i}(j).Bern.r...
+                    && GGIW_KLdiv(tracks{i}(idx_b).Bern.GGIW(end),tracks{i}(j).Bern.GGIW(end)) < model.merge
+                I = [I j];
+            end
+        end
+        len = length(I);
+        if len > 1
+            Bern_temp = [tracks{i}(I).Bern];
+            w_temp = zeros(len,1);
+            GGIW_to_merge = [];
+            for l = 1:len
+                [~,w_temp(l)] = normalizeLogWeights(wAssoc(table(:,i)==I(l)));
+                GGIW_to_merge = [GGIW_to_merge;Bern_temp(l).GGIW(end)];
+            end
+            %Assume the same weight
+            [~,GGIW_hat] = GGIW_merge_wrap(w_temp,GGIW_to_merge);
+            tracks{i}(idx_b).Bern.GGIW(end) = GGIW_hat;
+            idx_remove = setdiff(I,idx_b);
+            tracks{i}(idx_remove) = [];
+            table(ismember(table(:,i),I),i) = idx_b;
+        end
+    end
+end
+
+%Re-index hypothesis table
+n_tt = length(tracks);
+for i = 1:n_tt
+    idx = table(:,i) > 0;
+    [~,~,table(idx,i)] = unique(table(idx,i),'rows','stable');
+end
+
+%Merge duplicate hypothesis table rows
+if ~isempty(table)
+    [ht,~,ic] = unique(table,'rows','stable');
+    if(size(ht,1)~=size(table,1))
+        %There are duplicate entries
+        w = zeros(size(ht,1),1);
+        for i = 1:size(ht,1)
+            indices_dupli = (ic==i);
+            [~,w(i)] = normalizeLogWeights(wAssoc(indices_dupli));
+        end
+        table = ht;
+        wAssoc = w;
+    end
+end
+
+if length(wAssoc) == 1; wAssoc = 0; end
 
 %%%%%%%%%%%%
 

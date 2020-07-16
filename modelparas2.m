@@ -80,6 +80,7 @@ model.Qd = 1 - model.Pd*Pg;
 model.threshold_r = 1e-2;   %existence probability of Bernoulli component
 model.threshold_u = 1e-2;   %weight of mixture component in PPP
 model.threshold_w = 1e-2;   %weight of global hypothesis (multi-Bernoulli)
+model.threshold_s = 1e-4;   %weight of trajectory is alive if exists
 
 model.recycle = 1e-1;       %recycling threshold
 model.merge = 4;            %merge threshold used to merge similar GGIWs
@@ -98,9 +99,7 @@ if ifplot
     screen_size = get(0, 'ScreenSize');
     f1 = figure(1);
     set(f1, 'Position', [0 0 screen_size(3) screen_size(4)]);
-    grid on
-    box on
-    hold on
+    grid on;box on;hold on
     
     cols = parula(length(targetTracks));
     for it = 1:length(targetTracks)
@@ -119,9 +118,7 @@ if ifplot
     ylim([-100,100])
     xlabel('x (m)','Interpreter','latex')
     ylabel('y (m)','Interpreter','latex')
-    axesH = gca;
-    axesH.XAxis.TickLabelInterpreter = 'latex';
-    axesH.YAxis.TickLabelInterpreter = 'latex';
+    set(gca,'TickLabelInterpreter', 'latex');
     set(gca,'FontSize',16)
     
 end

@@ -92,6 +92,11 @@ model.max_repetition = 2;   %controls the number of iterations used in SO
 %larger than this threshold
 model.exist_r = 0.5;
 
+% DBSCAN parameters, a grid search for hyperparameters
+model.max_dist = 5;
+model.min_dist = 0.1;
+model.grid_dist = 0.1;
+
 %% Plot ground truth
 
 if ifplot

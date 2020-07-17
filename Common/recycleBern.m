@@ -73,7 +73,9 @@ if ~isempty(MBM.table)
 end
 
 %Merge similar components in PPP
-[PPP.w,PPP.GGIW] = mixtureReduction(PPP.w,PPP.GGIW,model);
+if length(PPP.w) > 1
+    [PPP.w,PPP.GGIW] = mixtureReduction(PPP.w,PPP.GGIW,model);
+end
 
 end
 

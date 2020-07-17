@@ -247,7 +247,9 @@ end
 
 %Append new tracks for measurements that only fall inside the gate of
 %undetected targets
-[tracks,table,wAssoc] = newObjectsSO(tracks,table,wAssoc,PPP,W,gating_matrix_u,used_meas_u_not_d,time,model);
+if sum(used_meas_u_not_d) > 0
+    [tracks,table,wAssoc] = newObjectsSO(tracks,table,wAssoc,PPP,W,gating_matrix_u,used_meas_u_not_d,time,model);
+end
 
 %Remove Bernoulli components with low existence probability
 n_tt = length(tracks);

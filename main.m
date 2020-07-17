@@ -35,7 +35,7 @@ addpath('Data','Third-party code','Common')
 
 %Choose which multiple extended object tracking algorithm to implement:
 %MEOT 1: PMBM filter; MEOT 2: PMBM tracker
-MEOT = 1;
+MEOT = 2;
 
 if MEOT == 1 
     addpath('SetofTargets')
@@ -48,8 +48,8 @@ else
 end
 
 %Choose a scenario: Scenario 1: 27 targets born at four different
-%locations; Scenario 2: targets move in proximity.
-scenario = 1;
+%locations; Scenario 2: targets move in proximity (a broad birth prior).
+scenario = 2;
 
 %If plot
 ifplot = false;
@@ -189,8 +189,14 @@ if ifplot
     figure(3)
     grid on;box on;hold on
     
-    plot(1:100,card,'Linewidth',2)
-    plot(1:100,card_est,'Linewidth',2)
+    if scenario == 1
+        plot(1:100,card,'Linewidth',2)
+        plot(1:100,card_est,'Linewidth',2)
+    elseif scenario == 2
+        plot(1:40,card,'Linewidth',2)
+        plot(1:40,card_est,'Linewidth',2)
+    end
+    
     xlabel('Time step','Interpreter','latex')
     ylabel('Number of targets','Interpreter','latex')
     

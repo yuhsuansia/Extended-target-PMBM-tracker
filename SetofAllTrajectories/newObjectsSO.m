@@ -167,7 +167,10 @@ for t = 1:T
         num_repetition = 0;
     end
     
-    if sum(Lp) > lik; bestPartition = meas_cell; end
+    if sum(Lp) > lik
+        lik = sum(Lp); 
+        bestPartition = meas_cell; 
+    end
 end
 
 %Create new tracks and hypothesis look-up table

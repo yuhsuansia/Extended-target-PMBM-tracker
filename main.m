@@ -35,33 +35,53 @@ addpath('Data','Third-party code','Common')
 
 %Choose which multiple extended object tracking algorithm to implement:
 %MEOT 1: PMBM filter; MEOT 2: PMBM tracker
-MEOT = 2;
+MEOT = 1;
 
 if MEOT == 1 
+    fprintf('You have chosen to implement the extended target PMBM filter.\n');
     addpath('SetofTargets')
     rmpath('SetofAllTrajectories')
 elseif MEOT ==2
+    fprintf('You have chosen to implement the extended target PMBM tracker.\n');
     addpath('SetofAllTrajectories')
     rmpath('SetofTargets')
 else
     error('Please choose an existing algorithm!')
 end
 
+%Choose data assocation method: dataAssocMethod 1: conventional two-step
+%approach clustering (DBSCAN) + assignment (MURTY); dataAssocMethod 2:
+%likelihood-based one-step approach: stochastic optimisation based sampling
+dataAssocMethod = 1;
+
 %Choose a scenario: Scenario 1: 27 targets born at four different
 %locations; Scenario 2: targets move in proximity (a broad birth prior).
-scenario = 2;
+scenario = 1;
 
 %If plot
 ifplot = false;
 
 %Parameter setting
 if scenario == 1
+    fprintf('You have chosen to run the algorithm on Scenario 1.\n');
     modelparas1;
 elseif scenario == 2
+    fprintf('You have chosen to run the algorithm on Scenario 2.\n');
     modelparas2;
 else
     error('Please choose a valid scenario!')
 end
+
+if dataAssocMethod == 1
+    fprintf('You have chosen to use clustering and assignment for data association.\n');
+    model.dataAssocMethod = 1;
+elseif dataAssocMethod == 2
+    fprintf('You have chosen to use stochastic optimisation for data association.\n');
+    model.dataAssocMethod = 2;
+else
+    error('Please choose a valid data association method!')
+end
+
 
 %Parameters used in GOSPA metric
 c = 20;

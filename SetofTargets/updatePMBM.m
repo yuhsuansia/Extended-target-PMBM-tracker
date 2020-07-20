@@ -39,32 +39,41 @@ W1 = W(:,used_meas_d);
 gating_matrix_u1 = gating_matrix_u(used_meas_d,:);
 gating_matrix_d = cellfun(@(x) x(used_meas_d,:), gating_matrix_d, 'UniformOutput',false);
 
-%Data association using stochastic optimisation
+%Data association
 J = length(MBM.w);  %number of predicted global hypotheses
-wAssoc = [];        %initialise weights for new global hypotheses
-Nj = zeros(J,1);    %initialise number of newly created global hypotheses for each predicted global hypothesis
-P = cell(J,1);      %initialise measurement partitions for newly created global hypotheses
-for j = 1:J
-    if isempty(W1)
-        %Only misdetection hypotheses are considered if no measurements
-        track_indices = find(MBM.table(j,:)>0); %indices of tracks included in this global hypothesis
-        nj = length(track_indices);             %number of tracks in this global hypothesis
-        P{j}{1} = cell(nj,1);                   %empty measurement cells correspond to misdetection
-        lik = 0;                                %association likelihood in logarithm
-        for i = 1:nj
-            %Create new Bernoulli component due to missed detection
-            track_miss = MBM.track{track_indices(i)}(MBM.table(j,track_indices(i)));
-            %Compute the misdetection likelihood
-            [~,lik_miss] = misdetectionBern(track_miss.Bern,model);
-            lik = lik + lik_miss;
+
+if model.dataAssocMethod == 1
+    
+    [P,wAssoc,Nj] = ObjectsCA(MBM,PPP,W1,gating_matrix_d,gating_matrix_u1,model);
+    
+elseif model.dataAssocMethod == 2
+    
+    wAssoc = [];        %initialise weights for new global hypotheses
+    Nj = zeros(J,1);    %initialise number of newly created global hypotheses for each predicted global hypothesis
+    P = cell(J,1);      %initialise measurement partitions for newly created global hypotheses
+    for j = 1:J
+        if isempty(W1)
+            %Only misdetection hypotheses are considered if no measurements
+            track_indices = find(MBM.table(j,:)>0); %indices of tracks included in this global hypothesis
+            nj = length(track_indices);             %number of tracks in this global hypothesis
+            P{j}{1} = cell(nj,1);                   %empty measurement cells correspond to misdetection
+            lik = 0;                                %association likelihood in logarithm
+            for i = 1:nj
+                %Create new Bernoulli component due to missed detection
+                track_miss = MBM.track{track_indices(i)}(MBM.table(j,track_indices(i)));
+                %Compute the misdetection likelihood
+                [~,lik_miss] = misdetectionBern(track_miss.Bern,model);
+                lik = lik + lik_miss;
+            end
+        else
+            %Find multiple global hypotheses with high weights using Stochastic Optimization
+            [P{j},lik] = ObjectsSO(MBM,j,PPP,W1,gating_matrix_d,gating_matrix_u1,model);
         end
-    else
-        %Find multiple global hypotheses with high weights using Stochastic Optimization
-        [P{j},lik] = ObjectsSO(MBM,j,PPP,W1,gating_matrix_d,gating_matrix_u1,model);
+        %number of newly created global hypotheses for this predicted global hypothesis
+        Nj(j) = length(lik);
+        wAssoc = [wAssoc;lik+MBM.w(j)];
     end
-    %number of newly created global hypotheses for this predicted global hypothesis
-    Nj(j) = length(lik);
-    wAssoc = [wAssoc;lik+MBM.w(j)];
+    
 end
 
 %Normalise and prune multi-Bernoullis with low weights
@@ -75,7 +84,7 @@ if length(wAssoc) == 1; wAssoc = 0; end
 
 %Remove measurement partitions that correspond to low weight global hypotheses
 %indices of measurements that have been associated to pre-existing targets
-true_meas_indices = find(used_meas_d==1); 
+true_meas_indices = find(used_meas_d==1);
 idx_0 = 0;
 
 %Loop through each predicted global hypothesis
@@ -199,7 +208,7 @@ for i = 1:n_tt
     for j = 1:length(meas_track{i})
         for k = 1:size(meas_track{i}{j},1)
             idx = idx + 1;
-            tracks{i}(idx,1) = MBM.track{i}(j); 
+            tracks{i}(idx,1) = MBM.track{i}(j);
             if any(meas_track{i}{j}(k,:))
                 %Measurement update
                 [Bern,lik] = detectionBern(MBM.track{i}(j).Bern,W(:,meas_track{i}{j}(k,:)),model);
@@ -229,8 +238,8 @@ if n_tt_upd > n_tt
             %PPP update
             [Bern,lik] = detectionPPP(PPP.w(in_gate),PPP.GGIW(in_gate),W(:,meas_track{n_tt+i}{1}),model);
         else
-            Bern.r = 0; 
-            Bern.GGIW = struct('a',0,'b',1,'v',0,'P',zeros(2,2),'V',zeros(2,2)); 
+            Bern.r = 0;
+            Bern.GGIW = struct('a',0,'b',1,'v',0,'P',zeros(2,2),'V',zeros(2,2));
             lik = [];
         end
         %update local hypothesis association history
@@ -243,7 +252,11 @@ end
 %Append new tracks for measurements that only fall inside the gate of
 %undetected targets
 if sum(used_meas_u_not_d) > 0
-    [tracks,table,wAssoc] = newObjectsSO(tracks,table,wAssoc,PPP,W,gating_matrix_u,used_meas_u_not_d,time,model);
+    if model.dataAssocMethod == 1
+        [tracks,table,wAssoc] = newObjectsCA(tracks,table,wAssoc,PPP,W,gating_matrix_u,used_meas_u_not_d,time,model);
+    elseif model.dataAssocMethod == 2
+        [tracks,table,wAssoc] = newObjectsSO(tracks,table,wAssoc,PPP,W,gating_matrix_u,used_meas_u_not_d,time,model);
+    end
 end
 
 %Remove Bernoulli components with low existence probability
@@ -251,10 +264,10 @@ n_tt = length(tracks);
 for i = 1:n_tt
     %Find all Bernoulli components needed to be pruned
     idx = arrayfun(@(x) x.Bern.r < model.threshold_r, tracks{i});
-%     idx = arrayfun(@(x) x.Bern.r < model.threshold_r | ...
-%         (1-(x.Bern.GGIW.b/(x.Bern.GGIW(end).b+1))^x.Bern.GGIW(end).a) < 0.5 | ...
-%         x.Bern.GGIW.v < 6 | x.Bern.GGIW.P(1,1) > 20^2 | x.Bern.GGIW.P(2,2) > 20^2 |...
-%         x.Bern.GGIW.V(1,1)/(x.Bern.GGIW.v-6) > 20 | x.Bern.GGIW.V(2,2)/(x.Bern.GGIW.v-6) > 20, tracks{i});
+    %     idx = arrayfun(@(x) x.Bern.r < model.threshold_r | ...
+    %         (1-(x.Bern.GGIW.b/(x.Bern.GGIW(end).b+1))^x.Bern.GGIW(end).a) < 0.5 | ...
+    %         x.Bern.GGIW.v < 6 | x.Bern.GGIW.P(1,1) > 20^2 | x.Bern.GGIW.P(2,2) > 20^2 |...
+    %         x.Bern.GGIW.V(1,1)/(x.Bern.GGIW.v-6) > 20 | x.Bern.GGIW.V(2,2)/(x.Bern.GGIW.v-6) > 20, tracks{i});
     %Prune these Bernoulli components
     tracks{i} = tracks{i}(~idx);
     idx = find(idx);

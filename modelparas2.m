@@ -77,14 +77,14 @@ model.gamma= chi2inv(Pg,model.measmodel.d);
 model.Qd = 1 - model.Pd*Pg;
 
 % Pruning thresholds
-model.threshold_r = 1e-2;   %existence probability of Bernoulli component
-model.threshold_u = 1e-2;   %weight of mixture component in PPP
-model.threshold_w = 1e-2;   %weight of global hypothesis (multi-Bernoulli)
+model.threshold_r = 1e-3;   %existence probability of Bernoulli component
+model.threshold_u = 1e-3;   %weight of mixture component in PPP
+model.threshold_w = 1e-3;   %weight of global hypothesis (multi-Bernoulli)
 model.threshold_s = 1e-4;   %weight of trajectory is alive if exists
 
 model.recycle = 1e-1;       %recycling threshold
 model.merge = 4;            %merge threshold used to merge similar GGIWs
-model.M = 100;              %cap of number of MBM components in PMBM
+model.M = 20;              %cap of number of MBM components in PMBM
 model.num_iterations = 10;  %controls the number of iterations used in SO
 model.max_repetition = 2;   %controls the number of iterations used in SO
 

@@ -37,7 +37,7 @@ addpath('Data','Third-party code','Common')
 %MEOT 1: PMBM filter; MEOT 2: PMBM tracker
 MEOT = 1;
 
-if MEOT == 1 
+if MEOT == 1
     fprintf('You have chosen to implement the extended target PMBM filter.\n');
     addpath('SetofTargets')
     rmpath('SetofAllTrajectories')
@@ -59,7 +59,7 @@ dataAssocMethod = 1;
 scenario = 1;
 
 %If plot
-ifplot = false;
+ifplot = true;
 
 %Parameter setting
 if scenario == 1
@@ -141,7 +141,7 @@ for k = 1:K
     %Update step
     [PPP,MBM] = updatePMBM(PPP,MBM,Z{k},k,model);
     
-    %Extract estimates 
+    %Extract estimates
     if MEOT == 1
         %estimate of the multi-target states
         estimates{k} = estimator(MBM,model);
@@ -183,8 +183,12 @@ for k = 1:K
             h3 = plot(cx_est,cy_est,'b-','linewidth',2);
         end
         
-        legend([h1 h2 h3], 'Measurements', 'True object positions and extents', ...
-            'Estimated object positions and extents', 'Interpreter','latex');
+        if size(xx_est,2) > 0
+            legend([h1 h2 h3], 'Measurements', 'True object positions and extents', ...
+                'Estimated object positions and extents', 'Interpreter','latex');
+        else
+            legend([h1 h2], 'Measurements', 'True object positions and extents', 'Interpreter','latex');
+        end
         
         xlabel('x (m)','Interpreter','latex')
         ylabel('y (m)','Interpreter','latex')

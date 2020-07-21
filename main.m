@@ -59,7 +59,7 @@ dataAssocMethod = 1;
 scenario = 1;
 
 %If plot
-ifplot = true;
+ifplot = false;
 
 %Parameter setting
 if scenario == 1
@@ -118,7 +118,7 @@ end
 %%%%%%
 
 %Load measurements
-idx = 1; % range from 1 to 100
+idx = 20; % range from 1 to 100
 Z = Scenario.Z{idx};
 
 %PPP initialisation

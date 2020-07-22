@@ -35,7 +35,7 @@ addpath('Data','Third-party code','Common')
 
 %Choose which multiple extended object tracking algorithm to implement:
 %MEOT 1: PMBM filter; MEOT 2: PMBM tracker
-MEOT = 1;
+MEOT = 2;
 
 if MEOT == 1
     fprintf('You have chosen to implement the extended target PMBM filter.\n');
@@ -52,7 +52,7 @@ end
 %Choose data assocation method: dataAssocMethod 1: conventional two-step
 %approach clustering (DBSCAN) + assignment (MURTY); dataAssocMethod 2:
 %likelihood-based one-step approach: stochastic optimisation based sampling
-dataAssocMethod = 1;
+dataAssocMethod = 2;
 
 %Choose a scenario: Scenario 1: 27 targets born at four different
 %locations; Scenario 2: targets move in proximity (a broad birth prior).
@@ -84,6 +84,7 @@ end
 
 
 %Parameters used in GOSPA metric
+alpha = 2; %for MTT
 c = 20;
 p = 1;
 
@@ -91,7 +92,7 @@ p = 1;
 K = model.K;
 
 %Initialise memory
-GOSPA = zeros(K,4);
+GOSPA = zeros(K,4); %[GOSPA, Localisation, Missed, False]
 estimates = cell(K,1);
 
 if MEOT == 2
@@ -118,7 +119,7 @@ end
 %%%%%%
 
 %Load measurements
-idx = 20; % range from 1 to 100
+idx = 1; % range from 1 to 100
 Z = Scenario.Z{idx};
 
 %PPP initialisation
@@ -155,7 +156,10 @@ for k = 1:K
     [PPP,MBM] = recycleBern(PPP,MBM,model);
     
     %Evaluate filtering performance using GOSPA
-    GOSPA(k,:) = GOSPAmetric(estimates{k},groundTruth{k},c,p);
+    [GOSPA(k,1), ~, decomposed_cost] = GOSPA_extended(groundTruth{k}, estimates{k}, p, c, alpha);
+    GOSPA(k,2) = decomposed_cost.localisation;
+    GOSPA(k,3) = decomposed_cost.missed;
+    GOSPA(k,4) = decomposed_cost.false;
     
     %Prediction Step
     [PPP,MBM] = predictPMBM(PPP,MBM,model);

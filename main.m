@@ -83,10 +83,12 @@ else
 end
 
 
-%Parameters used in GOSPA metric
+%Parameters used in GOSPA (and LP trajectory) metric
 alpha = 2; %for MTT
 c = 20;
 p = 1;
+gamma = 2;
+
 
 %Number of time steps
 K = model.K;
@@ -204,6 +206,11 @@ for k = 1:K
         hold off
     end
     %%%%%%
+end
+
+if MEOT == 2
+    [dxy, wMat, loc_cost, miss_cost, fa_cost, switch_cost] = ...
+        LPTrajMetricWrapper(targetTracks, trajectoryEstimates{end}, c, p, gamma,K);
 end
 
 simulation_time = toc;

@@ -118,9 +118,3 @@ decomposed_cost.false        = (-decomposed_cost.false);
         end
     end
 end
-
-function db = computeBaseDistance(x_vec, y_vec)
-db = sum((x_vec - y_vec).^2)^(1/2);
-end
-
-

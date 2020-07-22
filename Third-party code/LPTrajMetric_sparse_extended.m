@@ -1,5 +1,5 @@
 function [dxy, wMat, loc_cost, miss_cost, fa_cost, switch_cost] ...
-    = LPTrajMetric_sparse(X, Y, c, p, gamma)
+    = LPTrajMetric_sparse_extended(X, Y, c, p, gamma)
 %% function [dxy, wMat, eVal] = LPTrajMetric(X, Y, c, p, gamma)
 % This function computes the LP metric between sets of trajectories defined
 % in https://arxiv.org/abs/1605.01177. 
@@ -29,7 +29,7 @@ function [dxy, wMat, loc_cost, miss_cost, fa_cost, switch_cost] ...
 % switch_cost: cost for switches over time, dimension '(T-1)x1'
 % -------------------------------------------------------------------------
 % Function modified by Angel F. Garcia-Fernandez: We use sparse matrices to compute the solution
-
+% Also by Yuxuan Xia: Use Gaussian Wasserstein distance for base distance
 %%%%%%%%%% Parameters of use %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 nx = size(X.xState, 3);
 ny = size(Y.xState, 3);
@@ -225,7 +225,12 @@ end
 function d = computeLocCostPerTime(x, y, c, p)
 if all(~isnan(x)) && all(~isnan(y)) 
     % neither x nor y has hole
-	d = min(norm(x-y, p)^p,c^p);
+    m1 = x(1:2);
+    P1 = reshape(x(3:6),2,2);
+    m2 = y(1:2);
+    P2 = reshape(y(3:6),2,2);
+    gwd = GaussianWassersteinDistance(m1,P1,m2,P2);
+	d = min(gwd^p,c^p);
 elseif any(isnan(x) & ~isnan(y)) || any(~isnan(x) & isnan(y)) 
     % exactly one of x and y has hole
     d = c^p/2;

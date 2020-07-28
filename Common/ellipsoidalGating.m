@@ -13,7 +13,7 @@ in_gate = false(size(W,2),1);
 
 H = model.measmodel.H(GGIW.m);
 %Take the extent into account when doing ellipsoidal gating
-S = GGIW.V/(GGIW.v-2*d-2) + H*GGIW.P*H' + model.measmodel.R;
+S = GGIW.V/(GGIW.v-2*d-2) + H*GGIW.P*H';
 S = (S + S')/2;
 
 nu = W - repmat(model.measmodel.h(GGIW.m),[1,size(W,2)]);

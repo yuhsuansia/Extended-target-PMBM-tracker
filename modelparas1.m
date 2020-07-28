@@ -52,7 +52,7 @@ end
 % for k = 1:K
 %     for i = 1:N(k)
 %         if rand < model.Pd              % simulate missed detection
-%             p = mvnrnd(X{k}(1:2,i),E{k}(:,:,i)+model.R,poissrnd(lambda));
+%             p = mvnrnd(X{k}(1:2,i),E{k}(:,:,i),poissrnd(lambda));
 %             Z{k} = [Z{k} p'];
 %         end
 %     end

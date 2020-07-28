@@ -44,7 +44,30 @@ J = length(MBM.w);  %number of predicted global hypotheses
 
 if model.dataAssocMethod == 1
     
-    [P,wAssoc,Nj] = ObjectsCA(MBM,PPP,W1,gating_matrix_d,gating_matrix_u1,model);
+    if ~isempty(W1)
+        [P,wAssoc,Nj] = ObjectsCA(MBM,PPP,W1,gating_matrix_d,gating_matrix_u1,model);
+    else
+        wAssoc = [];        %initialise weights for new global hypotheses
+        Nj = zeros(J,1);    %initialise number of newly created global hypotheses for each predicted global hypothesis
+        P = cell(J,1);      %initialise measurement partitions for newly created global hypotheses
+        for j = 1:J
+            %Only misdetection hypotheses are considered if no measurements
+            track_indices = find(MBM.table(j,:)>0); %indices of tracks included in this global hypothesis
+            nj = length(track_indices);             %number of tracks in this global hypothesis
+            P{j}{1} = cell(nj,1);                   %empty measurement cells correspond to misdetection
+            lik = 0;                                %association likelihood in logarithm
+            for i = 1:nj
+                %Create new Bernoulli component due to missed detection
+                track_miss = MBM.track{track_indices(i)}(MBM.table(j,track_indices(i)));
+                %Compute the misdetection likelihood
+                [~,lik_miss] = misdetectionBern(track_miss.Bern,model);
+                lik = lik + lik_miss;
+            end
+            %number of newly created global hypotheses for this predicted global hypothesis
+            Nj(j) = length(lik);
+            wAssoc = [wAssoc;lik+MBM.w(j)];
+        end
+    end
     
 elseif model.dataAssocMethod == 2
     

@@ -52,7 +52,7 @@ end
 %Choose data assocation method: dataAssocMethod 1: conventional two-step
 %approach clustering (DBSCAN) + assignment (MURTY); dataAssocMethod 2:
 %likelihood-based one-step approach: stochastic optimisation based sampling
-dataAssocMethod = 2;
+dataAssocMethod = 1;
 
 %Choose a scenario: Scenario 1: 27 targets born at four different
 %locations; Scenario 2: targets move in proximity (a broad birth prior).

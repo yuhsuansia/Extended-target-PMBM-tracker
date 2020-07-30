@@ -35,7 +35,7 @@ addpath('Data','Third-party code','Common')
 
 %Choose which multiple extended object tracking algorithm to implement:
 %MEOT 1: PMBM filter; MEOT 2: PMBM tracker
-MEOT = 2;
+MEOT = 1;
 
 if MEOT == 1
     fprintf('You have chosen to implement the extended target PMBM filter.\n');
@@ -52,7 +52,7 @@ end
 %Choose data assocation method: dataAssocMethod 1: conventional two-step
 %approach clustering (DBSCAN) + assignment (MURTY); dataAssocMethod 2:
 %likelihood-based one-step approach: stochastic optimisation based sampling
-dataAssocMethod = 1;
+dataAssocMethod = 2;
 
 %Choose a scenario: Scenario 1: 27 targets born at four different
 %locations; Scenario 2: targets move in proximity (a broad birth prior).
@@ -82,6 +82,8 @@ else
     error('Please choose a valid data association method!')
 end
 
+%Choose whether to perform track-oriented PMB approximation
+model.ifTOPMB = false;
 
 %Parameters used in GOSPA (and LP trajectory) metric
 alpha = 2; %for MTT

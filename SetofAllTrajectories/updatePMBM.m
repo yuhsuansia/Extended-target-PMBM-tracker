@@ -352,8 +352,7 @@ for i = 1:n_tt
     nb = length(tracks{i});
     if nb > 1
         %find the highest weight MB that contains this track
-        idx_mb = table(:,i) > 0;
-        idx_mb = find(idx_mb);
+        idx_mb = find(table(:,i) > 0);
         [~,idx] = max(wAssoc(idx_mb));
         idx_b = table(idx_mb(idx),i);
         I = idx_b;

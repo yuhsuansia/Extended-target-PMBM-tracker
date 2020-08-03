@@ -2,32 +2,30 @@ function [tracks,table,wAssoc] = trackOrientedPMB(tracks,table,wAssoc)
 
 %number of tracks
 n_tt = length(tracks);
-if n_tt == 0
+if length(wAssoc) == 1 || n_tt == 0
     return
 else
     %merging local hypotheses in the same track
     for i = 1:n_tt
         %number of local hypotheses
         nb = length(tracks{i});
-        if nb > 1
-            %for each local hypothesis, find global hypotheses that contain it
-            w_merge = zeros(nb,1);
-            GGIW_to_merge = [];
-            for j = 1:nb
-                %add global hypotheses weights
-                [~,w_merge(j)] = normalizeLogWeights(wAssoc(table(:,i) == j));
-                %multiply with the existence probability (summation in logarithm)
-                w_merge(j) = w_merge(j) + log(tracks{i}(j).Bern.r);
-                GGIW_to_merge = [GGIW_to_merge;tracks{i}(j).Bern.GGIW];
-            end
-            %merge all GGIWs and existence probability
-            [r_hat,GGIW_hat] = GGIW_merge_wrap(w_merge,GGIW_to_merge);
-            [~,idx] = max(w_merge);
-            tracks{i}(idx).Bern.r = r_hat;
-            tracks{i}(idx).Bern.GGIW = GGIW_hat;
-            tracks{i}(1) = tracks{i}(idx);
-            tracks{i}(2:end) = [];
+        %for each local hypothesis, find global hypotheses that contain it
+        w_merge = zeros(nb,1);
+        GGIW_to_merge = [];
+        for j = 1:nb
+            %add global hypotheses weights
+            [~,w_merge(j)] = normalizeLogWeights(wAssoc(table(:,i) == j));
+            %multiply with the existence probability (summation in logarithm)
+            w_merge(j) = w_merge(j) + log(tracks{i}(j).Bern.r);
+            GGIW_to_merge = [GGIW_to_merge;tracks{i}(j).Bern.GGIW];
         end
+        %merge all GGIWs and existence probability
+        [r_hat,GGIW_hat] = GGIW_merge_wrap(w_merge,GGIW_to_merge);
+        [~,idx] = max(w_merge);
+        tracks{i}(idx).Bern.r = r_hat;
+        tracks{i}(idx).Bern.GGIW = GGIW_hat;
+        tracks{i}(1) = tracks{i}(idx);
+        tracks{i}(2:end) = [];
     end
     
     table = ones(1,n_tt);

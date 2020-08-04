@@ -21,10 +21,8 @@ else
         end
         %merge all GGIWs and existence probability
         [r_hat,GGIW_hat] = GGIW_merge_wrap(w_merge,GGIW_to_merge);
-        [~,idx] = max(w_merge);
-        tracks{i}(idx).Bern.r = r_hat;
-        tracks{i}(idx).Bern.GGIW = GGIW_hat;
-        tracks{i}(1) = tracks{i}(idx);
+        tracks{i}(1).Bern.r = r_hat;
+        tracks{i}(1).Bern.GGIW = GGIW_hat;
         tracks{i}(2:end) = [];
     end
     

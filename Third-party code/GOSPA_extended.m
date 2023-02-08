@@ -55,7 +55,7 @@ else
     else % when both x_mat and y_mat are non-empty, use auction algorithm
         cost_mat = -(cost_mat.^p);
         [x_to_y_assignment, y_to_x_assignment, ~] ...
-            = auctionAlgorithm(cost_mat, 20*(nx * ny));
+            = assign2D(cost_mat,true);
         % use the assignments to compute the cost
         for ind = 1:nx
             if x_to_y_assignment(ind) ~= 0
